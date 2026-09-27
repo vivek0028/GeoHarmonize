@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    container_name: geoharmonize-postgis
+    environment:
+      POSTGRES_DB: geoharmonize
+      POSTGRES_USER: geoharmonize
+      POSTGRES_PASSWORD: geoharmonize_secure_pass_2026
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U geoharmonize -d geoharmonize"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: geoharmonize-backend
+    environment:
+      DATABASE_URL: postgresql://geoharmonize:geoharmonize_secure_pass_2026@db:5432/geoharmonize
+      SECRET_KEY: geoharmonize-production-secret-key-2026
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  pgdata:
