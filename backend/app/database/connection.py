@@ -7,18 +7,39 @@ from datetime import datetime
 from app.core.config import settings
 from app.core.security import get_password_hash
 
+import time
+
+def get_clean_db_url():
+    url = settings.DATABASE_URL
+    if url.startswith("postgres://"):
+        url = url.replace("postgres://", "postgresql://", 1)
+    return url
+
 def get_db():
-    conn = psycopg2.connect(settings.DATABASE_URL, cursor_factory=RealDictCursor)
+    conn = psycopg2.connect(get_clean_db_url(), cursor_factory=RealDictCursor)
     try:
         yield conn
     finally:
         conn.close()
 
 def get_connection():
-    return psycopg2.connect(settings.DATABASE_URL, cursor_factory=RealDictCursor)
+    return psycopg2.connect(get_clean_db_url(), cursor_factory=RealDictCursor)
 
 def init_db():
-    conn = psycopg2.connect(settings.DATABASE_URL)
+    # Retry loop in case database is still warming up during deployment
+    conn = None
+    for attempt in range(1, 10):
+        try:
+            conn = psycopg2.connect(get_clean_db_url())
+            break
+        except Exception as e:
+            print(f"Database connection attempt {attempt}/10 failed: {e}. Retrying in 2s...")
+            time.sleep(2)
+            
+    if not conn:
+        print("Warning: Could not connect to PostgreSQL on startup.")
+        return
+        
     conn.autocommit = True
     cursor = conn.cursor()
     
