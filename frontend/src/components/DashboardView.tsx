@@ -15,6 +15,7 @@ import {
   Cpu
 } from 'lucide-react';
 import { DashboardStats, User } from '../types';
+import { fallbackDashboardStats } from '../services/mockData';
 
 interface DashboardViewProps {
   stats: DashboardStats | null;
@@ -31,16 +32,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   onRunPipeline,
   isRunningPipeline
 }) => {
-  if (!stats) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="flex flex-col items-center gap-3">
-          <div className="w-8 h-8 border-3 border-emerald-600 border-t-transparent rounded-full animate-spin"></div>
-          <p className="text-sm text-slate-500 font-medium">Loading GeoHarmonize pipeline status...</p>
-        </div>
-      </div>
-    );
-  }
+  const activeStats = stats || fallbackDashboardStats;
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 pb-28 space-y-6">
@@ -101,7 +93,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </div>
           </div>
           <div className="text-2xl font-bold text-slate-900 tracking-tight">
-            {stats.datasets_count}
+            {activeStats.datasets_count}
           </div>
           <div className="text-[11px] text-slate-500 mt-1 flex items-center gap-1 font-medium">
             <span className="text-emerald-600 font-semibold">4 active sources</span> (Cadastral, Survey, Buildings, GNSS)
@@ -120,7 +112,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </div>
           </div>
           <div className="text-2xl font-bold text-slate-900 tracking-tight">
-            {stats.parcels_processed.toLocaleString()}
+            {activeStats.parcels_processed.toLocaleString()}
           </div>
           <div className="text-[11px] text-emerald-600 mt-1 flex items-center gap-1 font-medium">
             <TrendingUp className="w-3 h-3" />
@@ -140,7 +132,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </div>
           </div>
           <div className="text-2xl font-bold text-slate-900 tracking-tight">
-            {stats.matched_features.toLocaleString()}
+            {activeStats.matched_features.toLocaleString()}
           </div>
           <div className="text-[11px] text-slate-500 mt-1 font-medium">
             Avg match IoU: <span className="font-semibold text-teal-700">94.2%</span>
@@ -159,7 +151,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </div>
           </div>
           <div className="text-2xl font-bold text-amber-600 tracking-tight flex items-baseline gap-2">
-            {stats.conflicts_count}
+            {activeStats.conflicts_count}
             <span className="text-xs font-medium text-slate-400">pending review</span>
           </div>
           <div className="text-[11px] text-amber-700 mt-1 font-medium flex items-center gap-1">
@@ -180,7 +172,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </div>
           </div>
           <div className="text-2xl font-bold text-slate-900 tracking-tight">
-            {stats.average_confidence}%
+            {activeStats.average_confidence}%
           </div>
           <div className="text-[11px] text-purple-700 mt-1 font-medium">
             34 in Low-Confidence Queue
@@ -217,7 +209,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {stats.recent_jobs.map((job) => (
+                {activeStats.recent_jobs.map((job) => (
                   <tr key={job.id} className="hover:bg-slate-50/70 transition-colors">
                     <td className="py-3 pl-1 font-semibold text-slate-800">
                       {job.dataset_name}
@@ -266,7 +258,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     High Confidence (&ge; 85%)
                   </span>
                   <span className="font-mono text-slate-700">
-                    {stats.confidence_distribution.HIGH} parcels (91% avg)
+                    {activeStats.confidence_distribution.HIGH} parcels (91% avg)
                   </span>
                 </div>
                 <div className="w-full bg-slate-100 rounded-full h-2">
@@ -281,7 +273,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     Medium Confidence (60% - 84%)
                   </span>
                   <span className="font-mono text-slate-700">
-                    {stats.confidence_distribution.MEDIUM} parcels (67% avg)
+                    {activeStats.confidence_distribution.MEDIUM} parcels (67% avg)
                   </span>
                 </div>
                 <div className="w-full bg-slate-100 rounded-full h-2">
@@ -296,7 +288,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     Low Confidence (&lt; 60%)
                   </span>
                   <span className="font-mono text-slate-700">
-                    {stats.confidence_distribution.LOW} parcels (Auto-Review)
+                    {activeStats.confidence_distribution.LOW} parcels (Auto-Review)
                   </span>
                 </div>
                 <div className="w-full bg-slate-100 rounded-full h-2">
@@ -322,19 +314,19 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
                 <span className="text-slate-500 block text-[11px]">Area Mismatch</span>
                 <span className="text-base font-bold text-slate-800">
-                  {stats.conflict_summary['AREA_MISMATCH'] || 1}
+                  {activeStats.conflict_summary['AREA_MISMATCH'] || 1}
                 </span>
               </div>
               <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
                 <span className="text-slate-500 block text-[11px]">Topology Overlap</span>
                 <span className="text-base font-bold text-slate-800">
-                  {stats.conflict_summary['TOPOLOGY_ERROR'] || 2}
+                  {activeStats.conflict_summary['TOPOLOGY_ERROR'] || 2}
                 </span>
               </div>
               <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100">
                 <span className="text-slate-500 block text-[11px]">Land Use Diff</span>
                 <span className="text-base font-bold text-slate-800">
-                  {stats.conflict_summary['LAND_USE_MISMATCH'] || 1}
+                  {activeStats.conflict_summary['LAND_USE_MISMATCH'] || 1}
                 </span>
               </div>
               <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100">

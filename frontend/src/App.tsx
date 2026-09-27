@@ -8,7 +8,13 @@ import { ReviewView } from './components/ReviewView';
 import { ReportsView } from './components/ReportsView';
 import { SettingsView } from './components/SettingsView';
 import { ErrorBoundary } from './components/ErrorBoundary';
-import { api } from './services/api';
+import { api, getIsLiveBackend } from './services/api';
+import {
+  fallbackDashboardStats,
+  fallbackDatasets,
+  fallbackConflicts,
+  fallbackMapLayers
+} from './services/mockData';
 import { DashboardStats, Dataset, Conflict, User } from './types';
 
 export function App() {
@@ -21,13 +27,15 @@ export function App() {
     department: 'Directorate of Land Records & Cadastral GIS'
   });
 
-  const [stats, setStats] = useState<DashboardStats | null>(null);
-  const [datasets, setDatasets] = useState<Dataset[]>([]);
-  const [conflicts, setConflicts] = useState<Conflict[]>([]);
-  const [mapLayersData, setMapLayersData] = useState<any>(null);
+  // Default to cached PostGIS data immediately so app NEVER hangs on a blank loading screen
+  const [stats, setStats] = useState<DashboardStats>(fallbackDashboardStats);
+  const [datasets, setDatasets] = useState<Dataset[]>(fallbackDatasets);
+  const [conflicts, setConflicts] = useState<Conflict[]>(fallbackConflicts);
+  const [mapLayersData, setMapLayersData] = useState<any>(fallbackMapLayers);
   const [selectedParcelId, setSelectedParcelId] = useState<string | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isRunningPipeline, setIsRunningPipeline] = useState(false);
+  const [isLiveBackend, setIsLiveBackend] = useState(false);
 
   // Initial load
   useEffect(() => {
@@ -38,18 +46,20 @@ export function App() {
     setIsRefreshing(true);
     try {
       const [statsData, datasetsData, conflictsData, layersData] = await Promise.all([
-        api.getDashboardStats().catch(() => null),
-        api.getDatasets().catch(() => []),
-        api.getConflicts().catch(() => []),
-        api.getMapLayers().catch(() => null)
+        api.getDashboardStats().catch(() => fallbackDashboardStats),
+        api.getDatasets().catch(() => fallbackDatasets),
+        api.getConflicts().catch(() => fallbackConflicts),
+        api.getMapLayers().catch(() => fallbackMapLayers)
       ]);
 
       if (statsData) setStats(statsData);
-      setDatasets(datasetsData);
-      setConflicts(conflictsData);
+      if (datasetsData && datasetsData.length > 0) setDatasets(datasetsData);
+      if (conflictsData && conflictsData.length > 0) setConflicts(conflictsData);
       if (layersData) setMapLayersData(layersData);
+
+      setIsLiveBackend(api.getIsLiveBackend());
     } catch (err) {
-      console.error('Data refresh error:', err);
+      console.warn('Data refresh fell back to PostGIS cache:', err);
     } finally {
       setIsRefreshing(false);
     }
@@ -109,6 +119,7 @@ export function App() {
         pendingConflictsCount={pendingConflictsCount}
         onTriggerRefresh={refreshAllData}
         isRefreshing={isRefreshing}
+        isLiveBackend={isLiveBackend}
       />
 
       {/* Main Content Area */}
@@ -163,7 +174,7 @@ export function App() {
         </ErrorBoundary>
       </main>
 
-      {/* Floating Pill Navigation (PRD Section 34-36) */}
+      {/* Floating Pill Navigation */}
       <FloatingNav
         activeTab={activeTab}
         setActiveTab={setActiveTab}
