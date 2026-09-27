@@ -9,7 +9,9 @@ import {
   User
 } from '../types';
 
-const BASE_URL = '/api';
+const RAW_URL = import.meta.env.VITE_API_URL || '';
+export const API_BASE_URL = RAW_URL ? (RAW_URL.endsWith('/api') ? RAW_URL : `${RAW_URL.replace(/\/$/, '')}/api`) : '/api';
+const BASE_URL = API_BASE_URL;
 
 export const api = {
   // Auth

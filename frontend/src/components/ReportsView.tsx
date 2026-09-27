@@ -51,7 +51,7 @@ export const ReportsView: React.FC<ReportsViewProps> = ({ apiClient }) => {
   };
 
   const handleDownloadGeoJSON = () => {
-    window.open('/api/reports/export/geojson', '_blank');
+    window.open(`${apiClient ? '/api' : '/api'}/reports/export/geojson`, '_blank');
   };
 
   const handleDownloadCSV = () => {
