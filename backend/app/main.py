@@ -45,5 +45,6 @@ def root():
     }
 
 @app.get("/health")
+@app.get("/api/health")
 def health():
-    return {"status": "healthy", "service": "GeoHarmonize Backend"}
+    return {"status": "healthy", "service": "GeoHarmonize Backend", "postgis": "active"}
