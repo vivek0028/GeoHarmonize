@@ -1,0 +1,468 @@
+{
+  "type": "FeatureCollection",
+  "name": "municipal_buildings",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "building_id": "BLDG-101",
+        "parcel_id": "P-101",
+        "type": "Residential",
+        "floors": 2,
+        "plinth_area": 115.2,
+        "source": "Municipal Property Tax Registry"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.215238,
+              28.624788
+            ],
+            [
+              77.215612,
+              28.624788
+            ],
+            [
+              77.215612,
+              28.624447
+            ],
+            [
+              77.215238,
+              28.624447
+            ],
+            [
+              77.215238,
+              28.624788
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "building_id": "BLDG-102",
+        "parcel_id": "P-102",
+        "type": "Residential",
+        "floors": 2,
+        "plinth_area": 148.8,
+        "source": "Municipal Property Tax Registry"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.216216,
+              28.624788
+            ],
+            [
+              77.21659,
+              28.624788
+            ],
+            [
+              77.21659,
+              28.624447
+            ],
+            [
+              77.216216,
+              28.624447
+            ],
+            [
+              77.216216,
+              28.624788
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "building_id": "BLDG-103",
+        "parcel_id": "P-103",
+        "type": "Commercial",
+        "floors": 4,
+        "plinth_area": 93.6,
+        "source": "Municipal Property Tax Registry"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.217193,
+              28.624788
+            ],
+            [
+              77.217567,
+              28.624788
+            ],
+            [
+              77.217567,
+              28.624447
+            ],
+            [
+              77.217193,
+              28.624447
+            ],
+            [
+              77.217193,
+              28.624788
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "building_id": "BLDG-104",
+        "parcel_id": "P-104",
+        "type": "Public Utility",
+        "floors": 4,
+        "plinth_area": 201.6,
+        "source": "Municipal Property Tax Registry"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.21817,
+              28.624788
+            ],
+            [
+              77.218544,
+              28.624788
+            ],
+            [
+              77.218544,
+              28.624447
+            ],
+            [
+              77.21817,
+              28.624447
+            ],
+            [
+              77.21817,
+              28.624788
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "building_id": "BLDG-105",
+        "parcel_id": "P-105",
+        "type": "Residential",
+        "floors": 2,
+        "plinth_area": 134.4,
+        "source": "Municipal Property Tax Registry"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.215238,
+              28.623895
+            ],
+            [
+              77.215612,
+              28.623895
+            ],
+            [
+              77.215612,
+              28.623555
+            ],
+            [
+              77.215238,
+              28.623555
+            ],
+            [
+              77.215238,
+              28.623895
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "building_id": "BLDG-106",
+        "parcel_id": "P-106",
+        "type": "Residential",
+        "floors": 2,
+        "plinth_area": 168.0,
+        "source": "Municipal Property Tax Registry"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.216216,
+              28.623895
+            ],
+            [
+              77.21659,
+              28.623895
+            ],
+            [
+              77.21659,
+              28.623555
+            ],
+            [
+              77.216216,
+              28.623555
+            ],
+            [
+              77.216216,
+              28.623895
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "building_id": "BLDG-107",
+        "parcel_id": "P-107",
+        "type": "Residential",
+        "floors": 2,
+        "plinth_area": 124.8,
+        "source": "Municipal Property Tax Registry"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.217193,
+              28.623895
+            ],
+            [
+              77.217567,
+              28.623895
+            ],
+            [
+              77.217567,
+              28.623555
+            ],
+            [
+              77.217193,
+              28.623555
+            ],
+            [
+              77.217193,
+              28.623895
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "building_id": "BLDG-108",
+        "parcel_id": "P-108",
+        "type": "Institutional",
+        "floors": 4,
+        "plinth_area": 187.2,
+        "source": "Municipal Property Tax Registry"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.21817,
+              28.623895
+            ],
+            [
+              77.218544,
+              28.623895
+            ],
+            [
+              77.218544,
+              28.623555
+            ],
+            [
+              77.21817,
+              28.623555
+            ],
+            [
+              77.21817,
+              28.623895
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "building_id": "BLDG-109",
+        "parcel_id": "P-109",
+        "type": "Residential",
+        "floors": 2,
+        "plinth_area": 105.6,
+        "source": "Municipal Property Tax Registry"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.215238,
+              28.623002
+            ],
+            [
+              77.215612,
+              28.623002
+            ],
+            [
+              77.215612,
+              28.622662
+            ],
+            [
+              77.215238,
+              28.622662
+            ],
+            [
+              77.215238,
+              28.623002
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "building_id": "BLDG-110",
+        "parcel_id": "P-110",
+        "type": "Mixed Use",
+        "floors": 4,
+        "plinth_area": 158.4,
+        "source": "Municipal Property Tax Registry"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.216216,
+              28.623002
+            ],
+            [
+              77.21659,
+              28.623002
+            ],
+            [
+              77.21659,
+              28.622662
+            ],
+            [
+              77.216216,
+              28.622662
+            ],
+            [
+              77.216216,
+              28.623002
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "building_id": "BLDG-111",
+        "parcel_id": "P-111",
+        "type": "Residential",
+        "floors": 2,
+        "plinth_area": 139.2,
+        "source": "Municipal Property Tax Registry"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.217193,
+              28.623002
+            ],
+            [
+              77.217567,
+              28.623002
+            ],
+            [
+              77.217567,
+              28.622662
+            ],
+            [
+              77.217193,
+              28.622662
+            ],
+            [
+              77.217193,
+              28.623002
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "building_id": "BLDG-112",
+        "parcel_id": "P-112",
+        "type": "Commercial",
+        "floors": 4,
+        "plinth_area": 216.0,
+        "source": "Municipal Property Tax Registry"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.21817,
+              28.623002
+            ],
+            [
+              77.218544,
+              28.623002
+            ],
+            [
+              77.218544,
+              28.622662
+            ],
+            [
+              77.21817,
+              28.622662
+            ],
+            [
+              77.21817,
+              28.623002
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

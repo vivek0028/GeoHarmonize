@@ -1,0 +1,480 @@
+{
+  "type": "FeatureCollection",
+  "name": "new_survey_parcels",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "survey_id": "S-20101",
+        "matched_parcel_ref": "P-101",
+        "area": 248.0,
+        "survey_agency": "National Drone & GNSS Directorate",
+        "survey_date": "2026-02-14",
+        "land_use": "Residential",
+        "equipment": "RTK-GNSS + LiDAR Drone"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.21504,
+              28.62497
+            ],
+            [
+              77.21597,
+              28.62497
+            ],
+            [
+              77.21597,
+              28.624185
+            ],
+            [
+              77.21504,
+              28.624185
+            ],
+            [
+              77.21504,
+              28.62497
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "survey_id": "S-20102",
+        "matched_parcel_ref": "P-102",
+        "area": 312.0,
+        "survey_agency": "National Drone & GNSS Directorate",
+        "survey_date": "2026-02-14",
+        "land_use": "Residential",
+        "equipment": "RTK-GNSS + LiDAR Drone"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.216018,
+              28.62497
+            ],
+            [
+              77.216978,
+              28.62497
+            ],
+            [
+              77.216978,
+              28.624235
+            ],
+            [
+              77.216018,
+              28.624235
+            ],
+            [
+              77.216018,
+              28.62497
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "survey_id": "S-20103",
+        "matched_parcel_ref": "P-103",
+        "area": 194.5,
+        "survey_agency": "National Drone & GNSS Directorate",
+        "survey_date": "2026-02-14",
+        "land_use": "Commercial",
+        "equipment": "RTK-GNSS + LiDAR Drone"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.216995,
+              28.62497
+            ],
+            [
+              77.217845,
+              28.62497
+            ],
+            [
+              77.217845,
+              28.624205
+            ],
+            [
+              77.216995,
+              28.624205
+            ],
+            [
+              77.216995,
+              28.62497
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "survey_id": "S-20104",
+        "matched_parcel_ref": "P-104",
+        "area": 418.0,
+        "survey_agency": "National Drone & GNSS Directorate",
+        "survey_date": "2026-02-14",
+        "land_use": "Public Utility",
+        "equipment": "RTK-GNSS + LiDAR Drone"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.217973,
+              28.62497
+            ],
+            [
+              77.218823,
+              28.62497
+            ],
+            [
+              77.218823,
+              28.624205
+            ],
+            [
+              77.217973,
+              28.624205
+            ],
+            [
+              77.217973,
+              28.62497
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "survey_id": "S-20105",
+        "matched_parcel_ref": "P-105",
+        "area": 281.0,
+        "survey_agency": "National Drone & GNSS Directorate",
+        "survey_date": "2026-02-14",
+        "land_use": "Commercial",
+        "equipment": "RTK-GNSS + LiDAR Drone"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.21504,
+              28.624078
+            ],
+            [
+              77.21589,
+              28.624078
+            ],
+            [
+              77.21589,
+              28.623313
+            ],
+            [
+              77.21504,
+              28.623313
+            ],
+            [
+              77.21504,
+              28.624078
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "survey_id": "S-20106",
+        "matched_parcel_ref": "P-106",
+        "area": 350.5,
+        "survey_agency": "National Drone & GNSS Directorate",
+        "survey_date": "2026-02-14",
+        "land_use": "Residential",
+        "equipment": "RTK-GNSS + LiDAR Drone"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.216018,
+              28.624078
+            ],
+            [
+              77.216868,
+              28.624078
+            ],
+            [
+              77.216868,
+              28.623313
+            ],
+            [
+              77.216018,
+              28.623313
+            ],
+            [
+              77.216018,
+              28.624078
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "survey_id": "S-20107",
+        "matched_parcel_ref": "P-107",
+        "area": 259.0,
+        "survey_agency": "National Drone & GNSS Directorate",
+        "survey_date": "2026-02-14",
+        "land_use": "Residential",
+        "equipment": "RTK-GNSS + LiDAR Drone"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.216995,
+              28.624078
+            ],
+            [
+              77.217845,
+              28.624078
+            ],
+            [
+              77.217845,
+              28.623313
+            ],
+            [
+              77.216995,
+              28.623313
+            ],
+            [
+              77.216995,
+              28.624078
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "survey_id": "S-20108",
+        "matched_parcel_ref": "P-108",
+        "area": 372.0,
+        "survey_agency": "National Drone & GNSS Directorate",
+        "survey_date": "2026-02-14",
+        "land_use": "Institutional",
+        "equipment": "RTK-GNSS + LiDAR Drone"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.217973,
+              28.624078
+            ],
+            [
+              77.218703,
+              28.624078
+            ],
+            [
+              77.218703,
+              28.623342
+            ],
+            [
+              77.217973,
+              28.623342
+            ],
+            [
+              77.217973,
+              28.624078
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "survey_id": "S-20109",
+        "matched_parcel_ref": "P-109",
+        "area": 220.0,
+        "survey_agency": "National Drone & GNSS Directorate",
+        "survey_date": "2026-02-14",
+        "land_use": "Residential",
+        "equipment": "RTK-GNSS + LiDAR Drone"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.21504,
+              28.623185
+            ],
+            [
+              77.21589,
+              28.623185
+            ],
+            [
+              77.21589,
+              28.62242
+            ],
+            [
+              77.21504,
+              28.62242
+            ],
+            [
+              77.21504,
+              28.623185
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "survey_id": "S-20110",
+        "matched_parcel_ref": "P-110",
+        "area": 331.0,
+        "survey_agency": "National Drone & GNSS Directorate",
+        "survey_date": "2026-02-14",
+        "land_use": "Mixed Use",
+        "equipment": "RTK-GNSS + LiDAR Drone"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.216018,
+              28.623185
+            ],
+            [
+              77.216868,
+              28.623185
+            ],
+            [
+              77.216868,
+              28.62242
+            ],
+            [
+              77.216018,
+              28.62242
+            ],
+            [
+              77.216018,
+              28.623185
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "survey_id": "S-20111",
+        "matched_parcel_ref": "P-111",
+        "area": 289.0,
+        "survey_agency": "National Drone & GNSS Directorate",
+        "survey_date": "2026-02-14",
+        "land_use": "Residential",
+        "equipment": "RTK-GNSS + LiDAR Drone"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.216995,
+              28.623185
+            ],
+            [
+              77.217845,
+              28.623185
+            ],
+            [
+              77.217845,
+              28.62242
+            ],
+            [
+              77.216995,
+              28.62242
+            ],
+            [
+              77.216995,
+              28.623185
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "survey_id": "S-20112",
+        "matched_parcel_ref": "P-112",
+        "area": 448.0,
+        "survey_agency": "National Drone & GNSS Directorate",
+        "survey_date": "2026-02-14",
+        "land_use": "Commercial",
+        "equipment": "RTK-GNSS + LiDAR Drone"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.217973,
+              28.623185
+            ],
+            [
+              77.218823,
+              28.623185
+            ],
+            [
+              77.218823,
+              28.62242
+            ],
+            [
+              77.217973,
+              28.62242
+            ],
+            [
+              77.217973,
+              28.623185
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}

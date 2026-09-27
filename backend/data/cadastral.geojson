@@ -1,0 +1,480 @@
+{
+  "type": "FeatureCollection",
+  "name": "cadastral_parcels",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "parcel_id": "P-101",
+        "parcel_no": "P-101",
+        "area": 240.0,
+        "land_use": "Residential",
+        "owner_name": "Aditi Sharma",
+        "source": "Historical Cadastre (1998)",
+        "registration_year": 1998
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.215,
+              28.625
+            ],
+            [
+              77.21585,
+              28.625
+            ],
+            [
+              77.21585,
+              28.624235
+            ],
+            [
+              77.215,
+              28.624235
+            ],
+            [
+              77.215,
+              28.625
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "parcel_id": "P-102",
+        "parcel_no": "P-102",
+        "area": 310.0,
+        "land_use": "Residential",
+        "owner_name": "Rajesh Verma",
+        "source": "Historical Cadastre (1998)",
+        "registration_year": 1998
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.215978,
+              28.625
+            ],
+            [
+              77.216828,
+              28.625
+            ],
+            [
+              77.216828,
+              28.624235
+            ],
+            [
+              77.215978,
+              28.624235
+            ],
+            [
+              77.215978,
+              28.625
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "parcel_id": "P-103",
+        "parcel_no": "P-103",
+        "area": 195.0,
+        "land_use": "Commercial",
+        "owner_name": "Metro Retail LLP",
+        "source": "Historical Cadastre (1998)",
+        "registration_year": 1998
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.216955,
+              28.625
+            ],
+            [
+              77.217805,
+              28.625
+            ],
+            [
+              77.217805,
+              28.624235
+            ],
+            [
+              77.216955,
+              28.624235
+            ],
+            [
+              77.216955,
+              28.625
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "parcel_id": "P-104",
+        "parcel_no": "P-104",
+        "area": 420.0,
+        "land_use": "Public Utility",
+        "owner_name": "Municipal Corp",
+        "source": "Historical Cadastre (1998)",
+        "registration_year": 1998
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.217933,
+              28.625
+            ],
+            [
+              77.218783,
+              28.625
+            ],
+            [
+              77.218783,
+              28.624235
+            ],
+            [
+              77.217933,
+              28.624235
+            ],
+            [
+              77.217933,
+              28.625
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "parcel_id": "P-105",
+        "parcel_no": "P-105",
+        "area": 280.0,
+        "land_use": "Residential",
+        "owner_name": "Kavita Rao",
+        "source": "Historical Cadastre (1998)",
+        "registration_year": 1998
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.215,
+              28.624108
+            ],
+            [
+              77.21585,
+              28.624108
+            ],
+            [
+              77.21585,
+              28.623342
+            ],
+            [
+              77.215,
+              28.623342
+            ],
+            [
+              77.215,
+              28.624108
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "parcel_id": "P-106",
+        "parcel_no": "P-106",
+        "area": 350.0,
+        "land_use": "Residential",
+        "owner_name": "Vikram Malhotra",
+        "source": "Historical Cadastre (1998)",
+        "registration_year": 1998
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.215978,
+              28.624108
+            ],
+            [
+              77.216828,
+              28.624108
+            ],
+            [
+              77.216828,
+              28.623342
+            ],
+            [
+              77.215978,
+              28.623342
+            ],
+            [
+              77.215978,
+              28.624108
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "parcel_id": "P-107",
+        "parcel_no": "P-107",
+        "area": 260.0,
+        "land_use": "Residential",
+        "owner_name": "Suresh Nair",
+        "source": "Historical Cadastre (1998)",
+        "registration_year": 1998
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.216955,
+              28.624108
+            ],
+            [
+              77.217805,
+              28.624108
+            ],
+            [
+              77.217805,
+              28.623342
+            ],
+            [
+              77.216955,
+              28.623342
+            ],
+            [
+              77.216955,
+              28.624108
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "parcel_id": "P-108",
+        "parcel_no": "P-108",
+        "area": 390.0,
+        "land_use": "Institutional",
+        "owner_name": "City Health Center",
+        "source": "Historical Cadastre (1998)",
+        "registration_year": 1998
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.217933,
+              28.624108
+            ],
+            [
+              77.218783,
+              28.624108
+            ],
+            [
+              77.218783,
+              28.623342
+            ],
+            [
+              77.217933,
+              28.623342
+            ],
+            [
+              77.217933,
+              28.624108
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "parcel_id": "P-109",
+        "parcel_no": "P-109",
+        "area": 220.0,
+        "land_use": "Residential",
+        "owner_name": "Deepak Joshi",
+        "source": "Historical Cadastre (1998)",
+        "registration_year": 1998
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.215,
+              28.623215
+            ],
+            [
+              77.21585,
+              28.623215
+            ],
+            [
+              77.21585,
+              28.62245
+            ],
+            [
+              77.215,
+              28.62245
+            ],
+            [
+              77.215,
+              28.623215
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "parcel_id": "P-110",
+        "parcel_no": "P-110",
+        "area": 330.0,
+        "land_use": "Mixed Use",
+        "owner_name": "Ananya Sen",
+        "source": "Historical Cadastre (1998)",
+        "registration_year": 1998
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.215978,
+              28.623215
+            ],
+            [
+              77.216828,
+              28.623215
+            ],
+            [
+              77.216828,
+              28.62245
+            ],
+            [
+              77.215978,
+              28.62245
+            ],
+            [
+              77.215978,
+              28.623215
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "parcel_id": "P-111",
+        "parcel_no": "P-111",
+        "area": 290.0,
+        "land_use": "Residential",
+        "owner_name": "Pooja Hegde",
+        "source": "Historical Cadastre (1998)",
+        "registration_year": 1998
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.216955,
+              28.623215
+            ],
+            [
+              77.217805,
+              28.623215
+            ],
+            [
+              77.217805,
+              28.62245
+            ],
+            [
+              77.216955,
+              28.62245
+            ],
+            [
+              77.216955,
+              28.623215
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "parcel_id": "P-112",
+        "parcel_no": "P-112",
+        "area": 450.0,
+        "land_use": "Commercial",
+        "owner_name": "Apex Tech Hub",
+        "source": "Historical Cadastre (1998)",
+        "registration_year": 1998
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.217933,
+              28.623215
+            ],
+            [
+              77.218783,
+              28.623215
+            ],
+            [
+              77.218783,
+              28.62245
+            ],
+            [
+              77.217933,
+              28.62245
+            ],
+            [
+              77.217933,
+              28.623215
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}
