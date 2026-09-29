@@ -3,7 +3,7 @@ from pydantic import BaseModel
 
 class Settings(BaseModel):
     PROJECT_NAME: str = "GeoHarmonize"
-    PROJECT_TAGLINE: str = "One Map. Multiple Sources. Trusted Land Records."
+    PROJECT_TAGLINE: str = "Every parcel has a history. Every decision has evidence."
     API_V1_STR: str = "/api"
     SECRET_KEY: str = os.getenv("SECRET_KEY", "geoharmonize-super-secret-production-key-2026")
     ALGORITHM: str = "HS256"

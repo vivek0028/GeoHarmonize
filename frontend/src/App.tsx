@@ -7,8 +7,11 @@ import { MapView } from './components/MapView';
 import { ReviewView } from './components/ReviewView';
 import { ReportsView } from './components/ReportsView';
 import { SettingsView } from './components/SettingsView';
+import { ParcelsView } from './components/ParcelsView';
+import { PassportModal } from './components/PassportModal';
+import { EvidenceGraphModal } from './components/EvidenceGraphModal';
 import { ErrorBoundary } from './components/ErrorBoundary';
-import { api, getIsLiveBackend } from './services/api';
+import { api } from './services/api';
 import {
   fallbackDashboardStats,
   fallbackDatasets,
@@ -23,16 +26,18 @@ export function App() {
     id: 2,
     name: 'Alex Mercer',
     email: 'analyst@geoharmonize.gov',
-    role: 'GIS_ANALYST',
+    role: 'ANALYST',
     department: 'Directorate of Land Records & Cadastral GIS'
   });
 
-  // Default to cached PostGIS data immediately so app NEVER hangs on a blank loading screen
+  // Cached PostGIS state
   const [stats, setStats] = useState<DashboardStats>(fallbackDashboardStats);
   const [datasets, setDatasets] = useState<Dataset[]>(fallbackDatasets);
   const [conflicts, setConflicts] = useState<Conflict[]>(fallbackConflicts);
   const [mapLayersData, setMapLayersData] = useState<any>(fallbackMapLayers);
   const [selectedParcelId, setSelectedParcelId] = useState<string | null>(null);
+  const [selectedPassportParcelId, setSelectedPassportParcelId] = useState<string | null>(null);
+  const [selectedEvidenceParcelId, setSelectedEvidenceParcelId] = useState<string | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isRunningPipeline, setIsRunningPipeline] = useState(false);
   const [isLiveBackend, setIsLiveBackend] = useState(false);
@@ -65,29 +70,50 @@ export function App() {
     }
   };
 
-  const handleSwitchRole = (role: 'ADMIN' | 'GIS_ANALYST') => {
-    if (role === 'ADMIN') {
-      setCurrentUser({
-        id: 1,
-        name: 'JD Admin (Director)',
-        email: 'admin@geoharmonize.gov',
-        role: 'ADMIN',
-        department: 'Cadastral Administration & Revenue'
-      });
-    } else {
-      setCurrentUser({
-        id: 2,
-        name: 'Alex Mercer',
-        email: 'analyst@geoharmonize.gov',
-        role: 'GIS_ANALYST',
-        department: 'Directorate of Land Records & Cadastral GIS'
-      });
+  const handleSwitchRole = (role: 'APPROVER' | 'ANALYST' | 'UPLOADER' | 'READ_ONLY') => {
+    switch (role) {
+      case 'APPROVER':
+        setCurrentUser({
+          id: 1,
+          name: 'JD Admin (Director)',
+          email: 'director@geoharmonize.gov',
+          role: 'APPROVER',
+          department: 'State Land Revenue Commission'
+        });
+        break;
+      case 'ANALYST':
+        setCurrentUser({
+          id: 2,
+          name: 'Alex Mercer',
+          email: 'analyst@geoharmonize.gov',
+          role: 'ANALYST',
+          department: 'Directorate of Land Records & Cadastral GIS'
+        });
+        break;
+      case 'UPLOADER':
+        setCurrentUser({
+          id: 3,
+          name: 'Rohan Sharma',
+          email: 'surveyor@geoharmonize.gov',
+          role: 'UPLOADER',
+          department: 'Field Survey & Drone Operations Wing'
+        });
+        break;
+      case 'READ_ONLY':
+        setCurrentUser({
+          id: 4,
+          name: 'Public Inquirer',
+          email: 'citizen@gov.in',
+          role: 'READ_ONLY',
+          department: 'Citizen Transparency Portal'
+        });
+        break;
     }
   };
 
   const handleSearchParcel = (parcelId: string) => {
     setSelectedParcelId(parcelId);
-    setActiveTab('map');
+    setSelectedPassportParcelId(parcelId);
   };
 
   const handleRunPipeline = async (jobType: string) => {
@@ -102,12 +128,18 @@ export function App() {
     }
   };
 
-  const handleResolveConflict = async (conflictId: number, action: string, customValue?: string) => {
-    await api.resolveConflict(conflictId, action, customValue);
+  const handleResolveConflict = async (
+    conflictId: number,
+    action: string,
+    customValue?: string,
+    reason?: string
+  ) => {
+    await api.resolveConflict(conflictId, action, customValue, reason);
     await refreshAllData();
   };
 
   const pendingConflictsCount = conflicts.filter((c) => c.status === 'PENDING').length;
+  const totalParcelsCount = stats?.parcels_processed ?? 200;
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col selection:bg-emerald-200">
@@ -116,14 +148,16 @@ export function App() {
         user={currentUser}
         onSwitchRole={handleSwitchRole}
         onSearchParcel={handleSearchParcel}
+        onOpenPassport={(pId) => setSelectedPassportParcelId(pId)}
         pendingConflictsCount={pendingConflictsCount}
+        totalParcelsCount={totalParcelsCount}
         onTriggerRefresh={refreshAllData}
         isRefreshing={isRefreshing}
         isLiveBackend={isLiveBackend}
       />
 
-      {/* Main Content Area */}
-      <main className="flex-1 w-full relative">
+      {/* Main Content Area with Bottom Padding to never be covered by Floating Nav */}
+      <main className="flex-1 w-full relative pb-32">
         <ErrorBoundary fallbackTitle="View Rendering Notice">
           {activeTab === 'overview' && (
             <DashboardView
@@ -132,6 +166,13 @@ export function App() {
               onNavigateTab={setActiveTab}
               onRunPipeline={handleRunPipeline}
               isRunningPipeline={isRunningPipeline}
+            />
+          )}
+
+          {activeTab === 'parcels' && (
+            <ParcelsView
+              onOpenPassport={(pId) => setSelectedPassportParcelId(pId)}
+              onOpenEvidenceGraph={(pId) => setSelectedEvidenceParcelId(pId)}
             />
           )}
 
@@ -149,9 +190,8 @@ export function App() {
               mapLayersData={mapLayersData}
               selectedParcelId={selectedParcelId}
               onSelectParcel={setSelectedParcelId}
-              onNavigateReview={() => {
-                setActiveTab('review');
-              }}
+              onNavigateReview={() => setActiveTab('review')}
+              onOpenPassport={(pId) => setSelectedPassportParcelId(pId)}
               apiClient={api}
             />
           )}
@@ -164,13 +204,19 @@ export function App() {
                 setSelectedParcelId(parcelId);
                 setActiveTab('map');
               }}
+              onOpenPassport={(pId) => setSelectedPassportParcelId(pId)}
+              onOpenEvidenceGraph={(pId) => setSelectedEvidenceParcelId(pId)}
               auditLogs={stats?.audit_logs || []}
+              apiClient={api}
+              onRefreshData={refreshAllData}
             />
           )}
 
           {activeTab === 'reports' && <ReportsView apiClient={api} />}
 
-          {activeTab === 'settings' && <SettingsView auditLogs={stats?.audit_logs || []} />}
+          {activeTab === 'settings' && (
+            <SettingsView auditLogs={stats?.audit_logs || []} apiClient={api} />
+          )}
         </ErrorBoundary>
       </main>
 
@@ -180,6 +226,31 @@ export function App() {
         setActiveTab={setActiveTab}
         pendingConflictsCount={pendingConflictsCount}
       />
+
+      {/* Parcel Reconciliation Passport Modal [Differentiator] */}
+      {selectedPassportParcelId && (
+        <PassportModal
+          parcelId={selectedPassportParcelId}
+          onClose={() => setSelectedPassportParcelId(null)}
+          onOpenEvidenceGraph={(pId) => {
+            setSelectedPassportParcelId(null);
+            setSelectedEvidenceParcelId(pId);
+          }}
+          onRefreshData={refreshAllData}
+        />
+      )}
+
+      {/* Evidence Graph Modal [Differentiator] */}
+      {selectedEvidenceParcelId && (
+        <EvidenceGraphModal
+          parcelId={selectedEvidenceParcelId}
+          onClose={() => setSelectedEvidenceParcelId(null)}
+          onOpenPassport={(pId) => {
+            setSelectedEvidenceParcelId(null);
+            setSelectedPassportParcelId(pId);
+          }}
+        />
+      )}
     </div>
   );
 }

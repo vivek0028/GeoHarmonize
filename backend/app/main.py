@@ -2,12 +2,12 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.database.connection import init_db
-from app.api import auth, datasets, parcels, matching, conflicts, map, processing, reports
+from app.api import auth, datasets, parcels, matching, conflicts, map, processing, reports, audit, imagery
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
-    description="GeoHarmonize: One Map. Multiple Sources. Trusted Land Records. Multi-source spatial conflation, AI matching, topology validation, and conflict resolution.",
-    version="1.0.0"
+    description="GeoHarmonize: Every parcel has a history. Every decision has evidence. Multi-source spatial conflation, AI matching, topology validation, and conflict resolution.",
+    version="2.0.0"
 )
 
 # Enable CORS for Vite frontend
@@ -33,6 +33,8 @@ app.include_router(conflicts.router, prefix=settings.API_V1_STR)
 app.include_router(map.router, prefix=settings.API_V1_STR)
 app.include_router(processing.router, prefix=settings.API_V1_STR)
 app.include_router(reports.router, prefix=settings.API_V1_STR)
+app.include_router(audit.router, prefix=settings.API_V1_STR)
+app.include_router(imagery.router, prefix=settings.API_V1_STR)
 
 @app.get("/")
 def root():
