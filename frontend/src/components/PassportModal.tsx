@@ -14,10 +14,12 @@ import {
   Sparkles,
   ArrowRight,
   Share2,
-  Info
+  Info,
+  RefreshCw
 } from 'lucide-react';
 import { ParcelPassport } from '../types';
 import { api } from '../services/api';
+import { downloadParcelPdfFile } from '../utils/downloadHelpers';
 
 interface PassportModalProps {
   parcelId: string;
@@ -69,8 +71,29 @@ export const PassportModal: React.FC<PassportModalProps> = ({
     }
   };
 
-  const handleDownloadPDF = () => {
-    window.open(`${api.getApiBaseUrl()}/reports/export/parcel-pdf/${parcelId}`, '_blank');
+  const [isExportingPdf, setIsExportingPdf] = useState(false);
+
+  const handleDownloadPDF = async () => {
+    if (!passport) return;
+    setIsExportingPdf(true);
+    try {
+      await downloadParcelPdfFile(passport.parcel_id, {
+        ulpin: passport.ulpin,
+        owner_name: passport.owner_name,
+        area: passport.area,
+        land_use: passport.land_use,
+        spatial_match_pct: passport.spatial_match_pct,
+        source_agreement_pct: passport.source_agreement_pct,
+        confidence_score: passport.confidence_score,
+        review_status: passport.review_status,
+        feature_hash: passport.feature_hash
+      });
+      setActionSuccess(`Official Parcel Passport PDF for ${passport.parcel_id} downloaded successfully.`);
+    } catch (e: any) {
+      alert('PDF export failed: ' + e.message);
+    } finally {
+      setIsExportingPdf(false);
+    }
   };
 
   if (isLoading || !passport) {
@@ -112,11 +135,16 @@ export const PassportModal: React.FC<PassportModalProps> = ({
           <div className="flex items-center gap-2">
             <button
               onClick={handleDownloadPDF}
-              className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer text-xs flex items-center gap-1.5"
+              disabled={isExportingPdf}
+              className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer text-xs flex items-center gap-1.5 disabled:opacity-60"
               title="Download Certificate"
             >
-              <FileDown className="w-4 h-4" />
-              <span className="hidden sm:inline">Export PDF</span>
+              {isExportingPdf ? (
+                <RefreshCw className="w-4 h-4 animate-spin text-emerald-400" />
+              ) : (
+                <FileDown className="w-4 h-4" />
+              )}
+              <span className="hidden sm:inline">{isExportingPdf ? 'Exporting...' : 'Export PDF'}</span>
             </button>
             {onOpenEvidenceGraph && (
               <button

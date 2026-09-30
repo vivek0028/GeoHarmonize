@@ -19,6 +19,7 @@ import {
   Archive
 } from 'lucide-react';
 import { ChangeDetectionResult, BenchmarkMetrics, LineageSummary } from '../types';
+import { downloadReportExport, downloadParcelPdfFile } from '../utils/downloadHelpers';
 
 interface ReportsViewProps {
   apiClient: any;
@@ -79,58 +80,12 @@ export const ReportsView: React.FC<ReportsViewProps> = ({ apiClient }) => {
     setDownloadingFormat(format);
     setDownloadNotice(null);
     try {
-      const baseUrl = '/api';
-      let endpoint = '';
-      let filename = '';
-
-      if (format === 'geojson') {
-        endpoint = `${baseUrl}/reports/export/geojson`;
-        filename = 'geoharmonize_reconciled_parcels.geojson';
-      } else if (format === 'gpkg') {
-        endpoint = `${baseUrl}/reports/export/geopackage`;
-        filename = 'geoharmonize_parcels.gpkg';
-      } else if (format === 'shp') {
-        endpoint = `${baseUrl}/reports/export/shapefile`;
-        filename = 'geoharmonize_shapefile.zip';
-      } else if (format === 'csv') {
-        endpoint = `${baseUrl}/reports/export/csv`;
-        filename = 'geoharmonize_parcels_ledger.csv';
-      } else if (format === 'conflicts') {
-        endpoint = `${baseUrl}/reports/export/conflicts`;
-        filename = 'geoharmonize_conflicts_case_report.csv';
-      }
-
-      const res = await fetch(endpoint);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const blob = await res.blob();
-      triggerDownload(blob, filename);
+      const filename = await downloadReportExport(format);
       setDownloadNotice(`Downloaded ${filename} successfully.`);
       setTimeout(() => setDownloadNotice(null), 4000);
     } catch (err: any) {
-      console.warn('Network export error, generating client fallback file:', err);
-      if (format === 'csv') {
-        const csvContent = "parcel_id,ulpin,area_sqm,land_use,owner_name,confidence_score,review_status,status\n" +
-          "P-101,DL-08-01-2026-0101,476.2,Commercial,Nitin Sharma,90.1,AUTO_MATCHED,ACTIVE\n" +
-          "P-102,DL-08-01-2026-0102,401.1,Public Utility,Manoj Saxena,39.6,ESCALATED,ACTIVE\n";
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        triggerDownload(blob, 'geoharmonize_parcels_ledger.csv');
-      } else if (format === 'conflicts') {
-        const csvContent = "conflict_id,parcel_id,type,attribute,source_a,value_a,source_b,value_b,severity,status\n" +
-          "85,P-102,SLIVER,geometry_sliver,1998 Cadastre,1.4 m²,Roadway Boundary,Flush,MEDIUM,PENDING\n";
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        triggerDownload(blob, 'geoharmonize_conflicts_case_report.csv');
-      } else {
-        const geojsonObj = {
-          type: "FeatureCollection",
-          name: "geoharmonize_parcels",
-          features: []
-        };
-        const ext = format === 'gpkg' ? 'gpkg' : (format === 'shp' ? 'zip' : 'geojson');
-        const blob = new Blob([JSON.stringify(geojsonObj, null, 2)], { type: 'application/octet-stream' });
-        triggerDownload(blob, `geoharmonize_parcels.${ext}`);
-      }
-      setDownloadNotice(`Export file generated and downloaded.`);
-      setTimeout(() => setDownloadNotice(null), 4000);
+      console.error('Export error:', err);
+      alert('Error downloading export: ' + (err?.message || 'Unknown error'));
     } finally {
       setDownloadingFormat(null);
     }
@@ -141,11 +96,7 @@ export const ReportsView: React.FC<ReportsViewProps> = ({ apiClient }) => {
     setDownloadingFormat('pdf');
     setDownloadNotice(null);
     try {
-      const res = await fetch(`/api/reports/export/parcel-pdf/${encodeURIComponent(pId)}`);
-      if (!res.ok) throw new Error(`HTTP ${res.status}: Failed to generate PDF`);
-      const blob = await res.blob();
-      const filename = `Parcel_Passport_${pId}.pdf`;
-      triggerDownload(blob, filename);
+      const filename = await downloadParcelPdfFile(pId);
       setDownloadNotice(`Official Parcel Passport ${filename} downloaded successfully.`);
       setTimeout(() => setDownloadNotice(null), 4000);
     } catch (err: any) {

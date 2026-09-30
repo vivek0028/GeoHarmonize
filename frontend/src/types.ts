@@ -185,6 +185,7 @@ export interface IntegratedRecord {
   conflict_count: number;
   status: 'REVIEWED' | 'APPROVED' | 'PENDING_REVIEW';
   review_status?: string;
+  feature_hash?: string;
   geometry?: any;
 }
 
