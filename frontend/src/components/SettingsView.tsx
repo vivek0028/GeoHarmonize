@@ -18,6 +18,12 @@ import {
   Copy
 } from 'lucide-react';
 import { api } from '../services/api';
+import {
+  getConfidenceWeights,
+  saveConfidenceWeights,
+  getAuthorityRules,
+  saveAuthorityRules
+} from '../utils/authorityRules';
 
 interface SettingsViewProps {
   auditLogs?: any[];
@@ -28,52 +34,16 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
   auditLogs = [],
   apiClient = api
 }) => {
-  const [spatialWeight, setSpatialWeight] = useState(35);
-  const [sourceWeight, setSourceWeight] = useState(25);
-  const [qualityWeight, setQualityWeight] = useState(25);
-  const [recencyWeight, setRecencyWeight] = useState(15);
+  const initialWeights = getConfidenceWeights();
+  const [spatialWeight, setSpatialWeight] = useState(initialWeights.spatial);
+  const [sourceWeight, setSourceWeight] = useState(initialWeights.source);
+  const [qualityWeight, setQualityWeight] = useState(initialWeights.quality);
+  const [recencyWeight, setRecencyWeight] = useState(initialWeights.recency);
   const [isRecalculating, setIsRecalculating] = useState(false);
   const [recalcSuccess, setRecalcSuccess] = useState<string | null>(null);
 
-  // Authority rules state
-  const [rules, setRules] = useState<any[]>([
-    {
-      id: 'rule_geom',
-      attribute: 'geometry',
-      target: 'Geometry Boundary & Vertices',
-      winner: 'Drone / RTK Survey (2026)',
-      condition: 'Positional Accuracy &le; 0.05m',
-      firedCount: 42,
-      active: true
-    },
-    {
-      id: 'rule_area',
-      attribute: 'area',
-      target: 'Parcel Polygon Area (m²)',
-      winner: 'Geodesic Recomputation (PostGIS ST_Area)',
-      condition: 'Ellipsoidal WGS84 Geodesic vs Scanned Record',
-      firedCount: 24,
-      active: true
-    },
-    {
-      id: 'rule_owner',
-      attribute: 'ownership',
-      target: 'Khatedar / Titleholder Identity',
-      winner: 'Revenue Settlement Records (Table)',
-      condition: 'Official State Revenue Authority Hierarchy',
-      firedCount: 18,
-      active: true
-    },
-    {
-      id: 'rule_landuse',
-      attribute: 'land_use',
-      target: 'Zoning & Physical Land Use',
-      winner: 'AI Aerial Building Extraction + Ground Survey',
-      condition: 'Conflated Orthophoto Overlap &ge; 85%',
-      firedCount: 14,
-      active: true
-    }
-  ]);
+  // Authority rules state loaded from shared rules engine
+  const [rules, setRules] = useState<any[]>(getAuthorityRules());
 
   // Ledger verification state
   const [isVerifying, setIsVerifying] = useState(false);
@@ -132,6 +102,12 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
     setIsRecalculating(true);
     setRecalcSuccess(null);
     try {
+      saveConfidenceWeights({
+        spatial: spatialWeight,
+        source: sourceWeight,
+        quality: qualityWeight,
+        recency: recencyWeight
+      });
       await apiClient.recalculateWeights(
         spatialWeight / 100,
         sourceWeight / 100,

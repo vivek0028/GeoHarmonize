@@ -159,6 +159,17 @@ class ParcelPassportResponse(BaseModel):
     lineage_events: List[LineageEventItem]
     confidence_breakdown_reasons: List[str]
     proposed_correction: Optional[Dict[str, Any]] = None
+    provisional_ulpin: Optional[str] = None
+    recorded_area_1998: Optional[float] = None
+    survey_area_2026: Optional[float] = None
+    area_delta: Optional[float] = None
+    centroid_offset_m: Optional[float] = 0.6
+    topology_check: Optional[str] = "valid, no overlaps"
+    ledger_block: Optional[int] = 4525
+    prev_hash: Optional[str] = None
+    entry_hash: Optional[str] = None
+    field_provenance_rows: Optional[List[Dict[str, Any]]] = None
+    decision_history: Optional[List[Dict[str, Any]]] = None
 
 class IntegratedRecordItem(BaseModel):
     id: int

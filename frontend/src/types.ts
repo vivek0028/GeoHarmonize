@@ -138,11 +138,41 @@ export interface EvidenceGraph {
   edges: EvidenceEdge[];
 }
 
+export interface FieldProvenanceRow {
+  attribute: string;
+  cadastral_1998: string;
+  municipal_2025: string;
+  survey_2026: string;
+  proposed_value: string;
+  rule_fired: string;
+  authority: string;
+  confidence: number;
+}
+
+export interface DecisionHistoryEntry {
+  action: string;
+  officer: string;
+  reason: string;
+  timestamp: string;
+  block_index: number;
+  hash?: string;
+  revertible?: boolean;
+}
+
 export interface ParcelPassport {
   id: number;
   parcel_id: string;
   ulpin: string;
+  provisional_ulpin?: string;
   area: number;
+  recorded_area_1998?: number;
+  survey_area_2026?: number;
+  area_delta?: number;
+  centroid_offset_m?: number;
+  topology_check?: string;
+  ledger_block?: number;
+  prev_hash?: string;
+  entry_hash?: string;
   land_use: string;
   owner_name: string;
   status: string;
@@ -159,6 +189,10 @@ export interface ParcelPassport {
   conflicts: Conflict[];
   lineage_events: LineageEvent[];
   confidence_breakdown_reasons: string[];
+  field_provenance_rows?: FieldProvenanceRow[];
+  decision_history?: DecisionHistoryEntry[];
+  approval_officer?: string;
+  approval_timestamp?: string;
   proposed_correction?: {
     before_area: number;
     after_area: number;

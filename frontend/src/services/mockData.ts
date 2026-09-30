@@ -314,6 +314,13 @@ export const fallbackConflicts: Conflict[] = [
   }
 ];
 
+const realisticNames = [
+  'R. K. Sharma', 'Sunita Devi', 'Manoj Saxena', 'Vikram Patel', 'Anita Verma',
+  'Harish Rao', 'Pooja Gupta', 'Deepak Joshi', 'Rajeshwari Iyer', 'Nitin Sharma',
+  'Amit Deshmukh', 'Meenakshi Sundaram', 'Pradeep Chawla', 'Kavita Reddy', 'Suresh Menon',
+  'Alok Srivastava', 'Geeta Pathak', 'Balvinder Singh', 'Tarun Kulkarni', 'Sangeeta Bhattacharya'
+];
+
 export const fallbackParcels: IntegratedRecord[] = Array.from({ length: 200 }, (_, i) => {
   const pidNum = 101 + i;
   const col = i % 20;
@@ -324,13 +331,14 @@ export const fallbackParcels: IntegratedRecord[] = Array.from({ length: 200 }, (
   const maxy = miny + 0.00095;
   const conf = i < 96 ? 91.5 : (i < 151 ? 73.0 : 48.0);
   const rev = i < 96 ? 'AUTO_MATCHED' : (i < 151 ? 'NEEDS_REVIEW' : 'ESCALATED');
+  const name = realisticNames[i % realisticNames.length];
   return {
     id: i + 1,
     parcel_id: `P-${pidNum}`,
-    ulpin: `DL-08-01-2026-${pidNum.toString().padStart(4, '0')}`,
+    ulpin: `DL08012600${pidNum.toString().padStart(3, '0')}A`,
     area: Math.round(240.0 + (i % 15) * 18.5),
     land_use: i % 3 === 0 ? 'Commercial' : (i % 5 === 0 ? 'Agricultural' : 'Residential'),
-    owner_name: `Citizen Owner ${pidNum}`,
+    owner_name: name,
     building_count: 1,
     survey_status: 'RECONCILED',
     spatial_match: Math.round(conf * 0.98),

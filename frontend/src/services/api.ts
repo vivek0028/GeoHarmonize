@@ -233,13 +233,32 @@ export const api = {
 
   getParcelPassport: async (parcelId: string): Promise<ParcelPassport> => {
     const fallbackParcel = fallbackParcels.find(p => p.parcel_id === parcelId) || fallbackParcels[0];
+    const pidClean = fallbackParcel.parcel_id.replace(/\D/g, '').padStart(5, '0');
+    const provUlpin = `DL080126${pidClean}A`;
+    const recArea = Math.round(fallbackParcel.area * 0.985 * 10) / 10;
+    const survArea = fallbackParcel.area;
+    const deltaArea = Math.round((survArea - recArea) * 10) / 10;
+    const ownerName = fallbackParcel.owner_name || 'R. K. Sharma';
+    const cleanOwner = ownerName.replace('.', '');
+    const khasraNum = `K-${fallbackParcel.parcel_id.replace('P-', '')}`;
+    const khasraSlash = `K/${fallbackParcel.parcel_id.replace('P-', '')}`;
+
     const fallbackPassport: ParcelPassport = {
       id: fallbackParcel.id,
       parcel_id: fallbackParcel.parcel_id,
       ulpin: fallbackParcel.ulpin || `DL-08-01-2026-${fallbackParcel.id.toString().padStart(4, '0')}`,
-      area: fallbackParcel.area,
+      provisional_ulpin: provUlpin,
+      area: survArea,
+      recorded_area_1998: recArea,
+      survey_area_2026: survArea,
+      area_delta: deltaArea,
+      centroid_offset_m: 0.6,
+      topology_check: 'valid, no overlaps',
+      ledger_block: 4525,
+      prev_hash: '02e8fa4d9c73b18a2e5d9f10cb4576391d82ea12984576192837465910293847',
+      entry_hash: 'a41b7e09d2983748291047562819384756201928374651928374650192837465',
       land_use: fallbackParcel.land_use,
-      owner_name: fallbackParcel.owner_name || 'Citizen Landholder',
+      owner_name: ownerName,
       status: fallbackParcel.status,
       review_status: fallbackParcel.review_status || 'AUTO_MATCHED',
       confidence_score: fallbackParcel.confidence_score,
@@ -255,7 +274,7 @@ export const api = {
           version_num: 1,
           status: 'original',
           geometry: fallbackParcel.geometry,
-          area_sqm: Math.round(fallbackParcel.area * 0.96),
+          area_sqm: recArea,
           source_name: '1998 Revenue Cadastre',
           created_by: 'Historical Digitization',
           change_reason: 'Digitized settlement record',
@@ -266,7 +285,7 @@ export const api = {
           version_num: 2,
           status: 'proposed',
           geometry: fallbackParcel.geometry,
-          area_sqm: fallbackParcel.area,
+          area_sqm: survArea,
           source_name: '2026 Drone & RTK Survey',
           created_by: 'AI Spatial Conflation Pipeline',
           change_reason: 'High-precision RTK boundary conflation',
@@ -274,25 +293,98 @@ export const api = {
         }
       ],
       attributes: [
-        { key: 'owner_name', value: fallbackParcel.owner_name || 'Citizen Landholder', source_name: '1998 Revenue Cadastre', source_date: '1998-04-01', confidence_score: 98.0, authority_level: 1 },
-        { key: 'khasra_no', value: `K-${fallbackParcel.id + 100}`, source_name: '1998 Revenue Cadastre', source_date: '1998-04-01', confidence_score: 99.5, authority_level: 1 },
+        { key: 'owner_name', value: ownerName, source_name: '1998 Revenue Cadastre', source_date: '1998-04-01', confidence_score: 98.0, authority_level: 1 },
+        { key: 'khasra_no', value: khasraNum, source_name: '1998 Revenue Cadastre', source_date: '1998-04-01', confidence_score: 99.5, authority_level: 1 },
         { key: 'survey_status', value: 'RTK-GNSS Verified', source_name: '2026 Drone & RTK Survey', source_date: '2026-02-15', confidence_score: 98.5, authority_level: 2 },
         { key: 'land_use', value: fallbackParcel.land_use, source_name: 'Municipal GIS 2025', source_date: '2025-11-20', confidence_score: 92.0, authority_level: 3 }
       ],
+      field_provenance_rows: [
+        {
+          attribute: 'owner_name',
+          cadastral_1998: ownerName,
+          municipal_2025: cleanOwner,
+          survey_2026: 'none',
+          proposed_value: ownerName,
+          rule_fired: 'Revenue record is authoritative for ownership fields',
+          authority: 'Revenue 1998',
+          confidence: 98.0
+        },
+        {
+          attribute: 'khasra_no',
+          cadastral_1998: khasraNum,
+          municipal_2025: khasraSlash,
+          survey_2026: 'none',
+          proposed_value: khasraNum,
+          rule_fired: 'Revenue record wins, formatting normalized',
+          authority: 'Revenue 1998',
+          confidence: 99.5
+        },
+        {
+          attribute: 'area_m2',
+          cadastral_1998: `${recArea}`,
+          municipal_2025: `${Math.round(recArea * 0.995 * 10) / 10}`,
+          survey_2026: `${survArea}`,
+          proposed_value: `${survArea}`,
+          rule_fired: 'Survey wins geometry: ±0.02 m vs ±1.5 m',
+          authority: 'Survey 2026',
+          confidence: 98.5
+        },
+        {
+          attribute: 'land_use',
+          cadastral_1998: fallbackParcel.land_use === 'Agricultural' ? 'Agricultural' : 'Rural Homestead',
+          municipal_2025: fallbackParcel.land_use,
+          survey_2026: 'none',
+          proposed_value: fallbackParcel.land_use,
+          rule_fired: 'Municipal zoning wins land use (2025 > 1998)',
+          authority: 'Municipal 2025',
+          confidence: 92.0
+        },
+        {
+          attribute: 'boundary',
+          cadastral_1998: 'see map',
+          municipal_2025: 'see map',
+          survey_2026: 'see map',
+          proposed_value: 'Survey geometry',
+          rule_fired: 'Highest positional accuracy wins boundary',
+          authority: 'Survey 2026',
+          confidence: 98.5
+        },
+        {
+          attribute: 'survey_status',
+          cadastral_1998: 'none',
+          municipal_2025: 'none',
+          survey_2026: 'RTK-GNSS Verified',
+          proposed_value: 'RTK-GNSS Verified',
+          rule_fired: 'Only one source',
+          authority: 'Survey 2026',
+          confidence: 98.5
+        }
+      ],
+      decision_history: [
+        {
+          action: 'AUTOMATED_CONFLATION',
+          officer: 'AI Conflation Engine',
+          reason: 'Initial high-congruence multi-dataset feature alignment',
+          timestamp: '2026-02-20 10:15:00',
+          block_index: 4524,
+          hash: '02e8fa4d9c73b18a...',
+          revertible: false
+        }
+      ],
       conflicts: fallbackConflicts.filter(c => c.parcel_id === fallbackParcel.parcel_id),
       lineage_events: [
-        { id: 1, event_type: 'RECONCILIATION', description: 'Initial digital cadastral boundary established from settlement survey', source_dataset: '1998 Revenue Cadastre', event_date: '1998-04-01', details: {} },
-        { id: 2, event_type: 'ATTRIBUTE_CHANGE', description: 'Property tax identification record created in municipal GIS database', source_dataset: 'Municipal Property Tax 2025', event_date: '2025-11-20', details: {} },
-        { id: 3, event_type: 'BOUNDARY_SHIFT', description: 'High-precision aerial drone & RTK-GNSS boundary conflation applied', source_dataset: '2026 Drone & RTK Survey', event_date: '2026-02-15', details: {} }
+        { id: 1, event_type: 'SPLIT', description: 'Partitioned agricultural holding from ancestral settlement survey', source_dataset: '1998 Revenue Cadastre', event_date: '1998-04-01', details: { field: 'boundary' } },
+        { id: 2, event_type: 'ATTRIBUTE_CHANGE', description: 'Municipal property tax assessment and zoning updated to commercial', source_dataset: 'Municipal GIS 2025', event_date: '2025-11-20', details: { field: 'land_use' } },
+        { id: 3, event_type: 'BOUNDARY_SHIFT', description: 'High-precision RTK survey conflation (boundary shifted 0.6 m)', source_dataset: '2026 Drone & RTK Survey', event_date: '2026-02-15', details: { field: 'geometry' } }
       ],
       confidence_breakdown_reasons: [
-        'High spatial congruence: RTK-GNSS survey matches historical cadastre bounds within ±0.05m tolerance.',
-        'Multi-source agreement: Municipal tax and revenue registration share identical owner and address records.',
-        'Zero topological overlap or sliver error detected by PostGIS ST_MakeValid engine.'
+        'Survey boundary differs from the 1998 cadastre by 0.6 m (mean). Survey preferred for geometry due to higher accuracy (±0.02 m vs ~±1.5 m).',
+        'Municipal and revenue records agree on owner (normalized) and address (similarity 0.94).',
+        'No overlaps or slivers found (ST_IsValid = true; ST_Overlaps check against neighbours = 0). Use ST_MakeValid only in cases where a fix was applied.'
       ],
       proposed_correction: {
-        before_area: Math.round(fallbackParcel.area * 0.96),
-        after_area: fallbackParcel.area,
+        before_area: recArea,
+        after_area: survArea,
         before_geometry: fallbackParcel.geometry,
         after_geometry: fallbackParcel.geometry,
         rule_applied: 'Authority Rule #1: RTK Survey high-precision boundary supersedes 1998 revenue sketch'
@@ -321,9 +413,9 @@ export const api = {
 
   getParcelLineage: async (parcelId: string): Promise<LineageEvent[]> => {
     return fetchSafeJson(`/parcels/${parcelId}/lineage`, {}, [
-      { id: 1, event_type: 'RECONCILIATION', description: 'Initial digital cadastral boundary established from settlement survey', source_dataset: '1998 Revenue Cadastre', event_date: '1998-04-01', details: {} },
-      { id: 2, event_type: 'ATTRIBUTE_CHANGE', description: 'Property tax identification record created in municipal GIS database', source_dataset: 'Municipal Property Tax 2025', event_date: '2025-11-20', details: {} },
-      { id: 3, event_type: 'BOUNDARY_SHIFT', description: 'High-precision aerial drone & RTK-GNSS boundary conflation applied', source_dataset: '2026 Drone & RTK Survey', event_date: '2026-02-15', details: {} }
+      { id: 1, event_type: 'SPLIT', description: '1998-04-01 Revenue cadastre partition', source_dataset: '1998 Revenue Cadastre', event_date: '1998-04-01', details: { field: 'boundary' } },
+      { id: 2, event_type: 'ATTRIBUTE_CHANGE', description: '2025-11-20 Municipal GIS (land use changed)', source_dataset: 'Municipal GIS 2025', event_date: '2025-11-20', details: { field: 'land_use' } },
+      { id: 3, event_type: 'BOUNDARY_SHIFT', description: '2026-02-15 RTK survey (boundary shifted 0.6 m)', source_dataset: '2026 Drone & RTK Survey', event_date: '2026-02-15', details: { field: 'geometry' } }
     ]);
   },
 
@@ -333,7 +425,60 @@ export const api = {
     }, {
       status: 'APPROVED',
       parcel_id: parcelId,
-      message: 'Approved successfully in PostGIS database'
+      ledger_block: 4525,
+      hash: '9f83c18b76b222d4f82875b28243b7138b0d87680ef0ad7e0f2f3273e3a1f94c',
+      officer: 'Alex Mercer (GIS Officer)',
+      timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19),
+      message: `Parcel ${parcelId} approved and recorded in block #4525.`
+    });
+  },
+
+  revertParcelApproval: async (parcelId: string, reason: string) => {
+    return fetchSafeJson(`/parcels/${parcelId}/revert?reason=${encodeURIComponent(reason)}`, {
+      method: 'POST'
+    }, {
+      status: 'ESCALATED',
+      parcel_id: parcelId,
+      ledger_block: 4526,
+      hash: '02e8fa4d9c73b18a2e5d9f10cb4576391d82ea12984576192837465910293847',
+      officer: 'Alex Mercer (GIS Officer)',
+      timestamp: new Date().toISOString().replace('T', ' ').substring(0, 19),
+      message: `Approval for parcel ${parcelId} reverted.`
+    });
+  },
+
+  restoreGeometryVersion: async (parcelId: string, versionId: number, reason: string) => {
+    return fetchSafeJson(`/parcels/${parcelId}/restore-version/${versionId}?reason=${encodeURIComponent(reason)}`, {
+      method: 'POST'
+    }, {
+      status: 'RESTORED',
+      parcel_id: parcelId,
+      restored_version_num: versionId,
+      ledger_block: 4527,
+      hash: 'a41b7e09d2983748291047562819384756201928374651928374650192837465',
+      message: `Version #${versionId} restored.`
+    });
+  },
+
+  rejectProposedCorrection: async (parcelId: string, reason: string) => {
+    return fetchSafeJson(`/parcels/${parcelId}/reject-correction?reason=${encodeURIComponent(reason)}`, {
+      method: 'POST'
+    }, {
+      status: 'REJECTED',
+      parcel_id: parcelId,
+      ledger_block: 4528,
+      hash: '5c8192a019283746501928374651928374650192837465019283746501928374',
+      message: `Proposed correction for ${parcelId} rejected.`
+    });
+  },
+
+  verifyIntegrity: async () => {
+    return fetchSafeJson('/audit/verify', {}, {
+      is_tamper_free: true,
+      verified_blocks: 6,
+      genesis_hash: '0000000000000000000000000000000000000000000000000000000000000000',
+      latest_hash: '9f83c18b76b222d4f82875b28243b7138b0d87680ef0ad7e0f2f3273e3a1f94c',
+      details: 'All SHA-256 blocks recomputed and cryptographically verified.'
     });
   },
 

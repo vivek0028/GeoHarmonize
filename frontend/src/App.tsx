@@ -237,6 +237,15 @@ export function App() {
             setSelectedEvidenceParcelId(pId);
           }}
           onRefreshData={refreshAllData}
+          onOpenMap={(pId) => {
+            setSelectedParcelId(pId);
+            setSelectedPassportParcelId(null);
+            setActiveTab('map');
+          }}
+          onOpenLedger={() => {
+            setSelectedPassportParcelId(null);
+            setActiveTab('settings');
+          }}
         />
       )}
 
