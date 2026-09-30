@@ -56,7 +56,7 @@ export const MapView: React.FC<MapViewProps> = ({
   });
 
   const [opacity, setOpacity] = useState(0.85);
-  const [basemap, setBasemap] = useState<'osm' | 'light' | 'satellite'>('light');
+  const [basemap, setBasemap] = useState<'satellite' | 'osm'>('satellite');
   const basemapLayerRef = useRef<L.TileLayer | null>(null);
   const [parcelDetail, setParcelDetail] = useState<any | null>(null);
   const [isDetailLoading, setIsDetailLoading] = useState(false);
@@ -71,16 +71,8 @@ export const MapView: React.FC<MapViewProps> = ({
   const [leftCompareLayer, setLeftCompareLayer] = useState<'cadastral' | 'municipal'>('cadastral');
   const [rightCompareLayer, setRightCompareLayer] = useState<'survey' | 'imagery_extracted'>('survey');
 
-  // Basemap Configurations with subdomains and maxNativeZoom to avoid broken tiles
-  const basemapConfigs: Record<'light' | 'satellite' | 'osm', { url: string; options: L.TileLayerOptions }> = {
-    light: {
-      url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
-      options: {
-        maxZoom: 20,
-        subdomains: 'abcd',
-        attribution: '&copy; CartoDB &copy; OpenStreetMap'
-      }
-    },
+  // Basemap Configurations (Satellite Imagery & Standard OpenStreetMap)
+  const basemapConfigs: Record<'satellite' | 'osm', { url: string; options: L.TileLayerOptions }> = {
     satellite: {
       url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
       options: {
@@ -100,7 +92,7 @@ export const MapView: React.FC<MapViewProps> = ({
     }
   };
 
-  const setMapBasemap = (type: 'light' | 'satellite' | 'osm') => {
+  const setMapBasemap = (type: 'satellite' | 'osm') => {
     setBasemap(type);
     const map = mapInstanceRef.current;
     if (!map) return;
@@ -585,7 +577,7 @@ export const MapView: React.FC<MapViewProps> = ({
               <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
                 <span className="text-[11px] text-slate-500 font-medium">Basemap:</span>
                 <div className="flex gap-1">
-                  {(['light', 'satellite', 'osm'] as const).map((b) => (
+                  {(['satellite', 'osm'] as const).map((b) => (
                     <button
                       key={b}
                       onClick={() => setMapBasemap(b)}
@@ -595,7 +587,7 @@ export const MapView: React.FC<MapViewProps> = ({
                           : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                       }`}
                     >
-                      {b}
+                      {b === 'satellite' ? 'Satellite' : 'OSM'}
                     </button>
                   ))}
                 </div>

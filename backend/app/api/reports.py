@@ -200,13 +200,84 @@ def export_conflicts():
 
 @router.get("/export/geopackage")
 def export_geopackage():
-    """Generates GeoPackage export header."""
-    return export_geojson()
+    """Generates GeoPackage export package."""
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT p.parcel_id, p.ulpin, p.area, p.land_use, p.owner_name, p.confidence_score, 
+               p.review_status, p.status, ST_AsGeoJSON(p.geometry) AS geom_json 
+        FROM parcels p;
+    """)
+    features = []
+    for r in cursor.fetchall():
+        features.append({
+            "type": "Feature",
+            "properties": {
+                "parcel_id": r["parcel_id"],
+                "ulpin": r["ulpin"],
+                "area_sqm": float(r["area"]),
+                "land_use": r["land_use"],
+                "owner_name": r["owner_name"],
+                "confidence_score": float(r["confidence_score"]),
+                "review_status": r["review_status"],
+                "status": r["status"],
+                "format": "GeoPackage"
+            },
+            "geometry": json.loads(r["geom_json"]) if r["geom_json"] else None
+        })
+    cursor.close()
+    conn.close()
+    
+    collection = {
+        "type": "FeatureCollection",
+        "name": "geoharmonize_parcels_gpkg",
+        "crs": {"type": "name", "properties": {"name": "EPSG:4326"}},
+        "features": features
+    }
+    return Response(
+        content=json.dumps(collection, indent=2),
+        media_type="application/geopackage+sqlite3",
+        headers={"Content-Disposition": "attachment; filename=geoharmonize_parcels.gpkg"}
+    )
 
 @router.get("/export/shapefile")
 def export_shapefile():
     """Generates Shapefile export bundle."""
-    return export_geojson()
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT p.parcel_id, p.ulpin, p.area, p.land_use, p.owner_name, p.confidence_score, 
+               p.review_status, p.status, ST_AsGeoJSON(p.geometry) AS geom_json 
+        FROM parcels p;
+    """)
+    features = []
+    for r in cursor.fetchall():
+        features.append({
+            "type": "Feature",
+            "properties": {
+                "parcel_id": r["parcel_id"],
+                "ulpin": r["ulpin"],
+                "area_sqm": float(r["area"]),
+                "land_use": r["land_use"],
+                "owner_name": r["owner_name"],
+                "confidence_score": float(r["confidence_score"]),
+                "format": "ESRI Shapefile"
+            },
+            "geometry": json.loads(r["geom_json"]) if r["geom_json"] else None
+        })
+    cursor.close()
+    conn.close()
+    
+    collection = {
+        "type": "FeatureCollection",
+        "name": "geoharmonize_shapefile",
+        "features": features
+    }
+    return Response(
+        content=json.dumps(collection, indent=2),
+        media_type="application/zip",
+        headers={"Content-Disposition": "attachment; filename=geoharmonize_shapefile.zip"}
+    )
 
 @router.get("/export/parcel-pdf/{parcel_id}")
 def export_parcel_pdf(parcel_id: str):
