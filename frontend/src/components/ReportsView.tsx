@@ -142,26 +142,11 @@ export const ReportsView: React.FC<ReportsViewProps> = ({ apiClient }) => {
     setDownloadNotice(null);
     try {
       const res = await fetch(`/api/reports/export/parcel-pdf/${encodeURIComponent(pId)}`);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const htmlText = await res.text();
-
-      // 1. Download official Certificate HTML file directly
-      const blob = new Blob([htmlText], { type: 'text/html;charset=utf-8' });
-      triggerDownload(blob, `Parcel_Passport_${pId}.html`);
-
-      // 2. Open printable view
-      const printWindow = window.open('', '_blank');
-      if (printWindow) {
-        printWindow.document.write(htmlText);
-        printWindow.document.close();
-        printWindow.focus();
-        setTimeout(() => {
-          try {
-            printWindow.print();
-          } catch {}
-        }, 500);
-      }
-      setDownloadNotice(`Parcel Passport for ${pId} generated and downloaded.`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}: Failed to generate PDF`);
+      const blob = await res.blob();
+      const filename = `Parcel_Passport_${pId}.pdf`;
+      triggerDownload(blob, filename);
+      setDownloadNotice(`Official Parcel Passport ${filename} downloaded successfully.`);
       setTimeout(() => setDownloadNotice(null), 4000);
     } catch (err: any) {
       alert('Error downloading Parcel Passport: ' + err.message);
