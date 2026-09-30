@@ -57,7 +57,7 @@ export const MapView: React.FC<MapViewProps> = ({
 
   const [opacity, setOpacity] = useState(0.85);
   const [basemap, setBasemap] = useState<'osm' | 'light' | 'satellite'>('light');
-  const [activeTileLayer, setActiveTileLayer] = useState<L.TileLayer | null>(null);
+  const basemapLayerRef = useRef<L.TileLayer | null>(null);
   const [parcelDetail, setParcelDetail] = useState<any | null>(null);
   const [isDetailLoading, setIsDetailLoading] = useState(false);
   const [showLayerPanel, setShowLayerPanel] = useState(true);
@@ -71,11 +71,67 @@ export const MapView: React.FC<MapViewProps> = ({
   const [leftCompareLayer, setLeftCompareLayer] = useState<'cadastral' | 'municipal'>('cadastral');
   const [rightCompareLayer, setRightCompareLayer] = useState<'survey' | 'imagery_extracted'>('survey');
 
-  // Basemap URLs
-  const basemaps = {
-    light: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
-    osm: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-    satellite: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
+  // Basemap Configurations with subdomains and maxNativeZoom to avoid broken tiles
+  const basemapConfigs: Record<'light' | 'satellite' | 'osm', { url: string; options: L.TileLayerOptions }> = {
+    light: {
+      url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+      options: {
+        maxZoom: 20,
+        subdomains: 'abcd',
+        attribution: '&copy; CartoDB &copy; OpenStreetMap'
+      }
+    },
+    satellite: {
+      url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+      options: {
+        maxZoom: 20,
+        maxNativeZoom: 19,
+        attribution: '&copy; Esri World Imagery'
+      }
+    },
+    osm: {
+      url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      options: {
+        maxZoom: 19,
+        maxNativeZoom: 19,
+        subdomains: 'abc',
+        attribution: '&copy; OpenStreetMap contributors'
+      }
+    }
+  };
+
+  const setMapBasemap = (type: 'light' | 'satellite' | 'osm') => {
+    setBasemap(type);
+    const map = mapInstanceRef.current;
+    if (!map) return;
+
+    // 1. Remove tracked basemap layer
+    if (basemapLayerRef.current) {
+      try {
+        map.removeLayer(basemapLayerRef.current);
+      } catch (err) {
+        console.warn('Error removing previous basemap:', err);
+      }
+      basemapLayerRef.current = null;
+    }
+
+    // 2. Extra safety: remove any orphaned TileLayer from the map
+    map.eachLayer((layer) => {
+      if (layer instanceof L.TileLayer) {
+        try {
+          map.removeLayer(layer);
+        } catch (err) {
+          console.warn('Error removing orphaned TileLayer:', err);
+        }
+      }
+    });
+
+    // 3. Create and mount new tile layer
+    const config = basemapConfigs[type];
+    const newTile = L.tileLayer(config.url, config.options);
+    newTile.addTo(map);
+    newTile.bringToBack();
+    basemapLayerRef.current = newTile;
   };
 
   // Initialize Map
@@ -93,12 +149,10 @@ export const MapView: React.FC<MapViewProps> = ({
 
     L.control.zoom({ position: 'topright' }).addTo(map);
 
-    const tile = L.tileLayer(basemaps[basemap], {
-      maxZoom: 20
-    }).addTo(map);
-
-    setActiveTileLayer(tile);
     mapInstanceRef.current = map;
+
+    // Mount initial basemap
+    setMapBasemap(basemap);
 
     // Initialize layer groups
     layerGroupsRef.current = {
@@ -118,15 +172,11 @@ export const MapView: React.FC<MapViewProps> = ({
     };
   }, []);
 
-  // Switch Basemap
+  // Sync basemap if state changes
   useEffect(() => {
-    if (!mapInstanceRef.current) return;
-    if (activeTileLayer) {
-      mapInstanceRef.current.removeLayer(activeTileLayer);
+    if (mapInstanceRef.current) {
+      setMapBasemap(basemap);
     }
-    const newTile = L.tileLayer(basemaps[basemap], { maxZoom: 20 }).addTo(mapInstanceRef.current);
-    newTile.bringToBack();
-    setActiveTileLayer(newTile);
   }, [basemap]);
 
   // Render GeoJSON Layers whenever data, activeLayers, timelineYear, or opacity changes
@@ -538,9 +588,11 @@ export const MapView: React.FC<MapViewProps> = ({
                   {(['light', 'satellite', 'osm'] as const).map((b) => (
                     <button
                       key={b}
-                      onClick={() => setBasemap(b)}
-                      className={`px-2 py-0.5 rounded text-[10px] font-semibold uppercase ${
-                        basemap === b ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                      onClick={() => setMapBasemap(b)}
+                      className={`px-2.5 py-1 rounded text-[10px] font-bold uppercase transition-all cursor-pointer ${
+                        basemap === b
+                          ? 'bg-slate-900 text-white shadow-xs'
+                          : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                       }`}
                     >
                       {b}
