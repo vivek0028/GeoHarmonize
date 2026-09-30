@@ -4,13 +4,17 @@ import csv
 import io
 import zipfile
 import sqlite3
-import tempfile
 import os
-from reportlab.lib.pagesizes import letter
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, HRFlowable
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.lib import colors
 from app.database.connection import get_connection
+
+try:
+    from reportlab.lib.pagesizes import letter
+    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+    from reportlab.lib import colors
+    HAS_REPORTLAB = True
+except ImportError:
+    HAS_REPORTLAB = False
 
 router = APIRouter(prefix="/reports", tags=["Reports"])
 
@@ -337,6 +341,9 @@ def export_parcel_pdf(parcel_id: str):
 
     if not p:
         raise HTTPException(status_code=404, detail="Parcel not found")
+
+    if not HAS_REPORTLAB:
+        raise HTTPException(status_code=503, detail="ReportLab PDF engine is initializing or not installed.")
 
     buf = io.BytesIO()
     doc = SimpleDocTemplate(
