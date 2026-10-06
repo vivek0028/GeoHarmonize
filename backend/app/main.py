@@ -36,7 +36,7 @@ app.include_router(reports.router, prefix=settings.API_V1_STR)
 app.include_router(audit.router, prefix=settings.API_V1_STR)
 app.include_router(imagery.router, prefix=settings.API_V1_STR)
 
-@app.get("/")
+@app.api_route("/", methods=["GET", "HEAD"])
 def root():
     return {
         "product": settings.PROJECT_NAME,
@@ -46,7 +46,7 @@ def root():
         "version": "1.0.0"
     }
 
-@app.get("/health")
-@app.get("/api/health")
+@app.api_route("/health", methods=["GET", "HEAD"])
+@app.api_route("/api/health", methods=["GET", "HEAD"])
 def health():
     return {"status": "healthy", "service": "GeoHarmonize Backend", "postgis": "active"}
