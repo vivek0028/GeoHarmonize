@@ -5,17 +5,13 @@ import {
   CheckCircle,
   AlertOctagon,
   Percent,
-  Play,
-  ArrowRight,
   Clock,
-  Sparkles,
   ShieldAlert,
   MapPin,
   TrendingUp,
   Cpu,
   RefreshCw,
   GitBranch,
-  FileCheck2,
   AlertTriangle,
   History
 } from 'lucide-react';
@@ -57,49 +53,6 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 pb-32 space-y-6">
-      {/* Hero Welcome Banner */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 via-slate-800 to-emerald-950 p-6 sm:p-8 text-white shadow-xl">
-        <div className="absolute right-0 top-0 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="space-y-2 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-semibold backdrop-blur-sm border border-emerald-500/30">
-              <Sparkles className="w-3.5 h-3.5" />
-              Multi-Source Land Conflation &amp; Provenance Engine Live
-            </div>
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white m-0">
-              Cadastral Reconciliation Console
-            </h1>
-            <p className="text-sm sm:text-base text-slate-300 font-normal leading-relaxed m-0">
-              Harmonizing historical revenue cadastres, modern drone/GNSS surveys, and municipal property footprints into a reconciled, evidence-backed record. Conflicts stay visible until an authorized official resolves them.
-            </p>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-3">
-            <button
-              onClick={() => onRunPipeline('FULL_CONFLATION')}
-              disabled={isRunningPipeline}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-xs sm:text-sm shadow-lg transition-all cursor-pointer ${
-                isRunningPipeline
-                  ? 'bg-emerald-700 text-emerald-100 cursor-not-allowed opacity-80'
-                  : 'bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-emerald-500/30 hover:shadow-emerald-500/50 hover:scale-[1.02]'
-              }`}
-            >
-              <Play className={`w-4 h-4 ${isRunningPipeline ? 'animate-spin' : 'fill-current'}`} />
-              {isRunningPipeline ? 'Executing AI Conflation...' : 'Run Conflation Pipeline'}
-            </button>
-
-            <button
-              onClick={() => onNavigateTab('parcels')}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-xs sm:text-sm bg-white/10 hover:bg-white/20 text-white backdrop-blur-md border border-white/10 transition-all cursor-pointer"
-            >
-              <FileCheck2 className="w-4 h-4 text-emerald-400" />
-              Parcel Passports
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-          </div>
-        </div>
-      </div>
-
       {/* Primary Metric Cards Grid */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
         {/* Datasets */}
