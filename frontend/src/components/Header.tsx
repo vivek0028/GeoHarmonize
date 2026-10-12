@@ -336,8 +336,15 @@ export const Header: React.FC<HeaderProps> = ({
               />
             </div>
 
-            <div className="flex items-center gap-2 pt-1">
+            <div className="flex items-center gap-2 pt-1 flex-wrap">
               <span className="text-[11px] text-slate-400 font-medium">Presets:</span>
+              <button
+                type="button"
+                onClick={() => setCustomUrlInput('https://geoharmonize-pf57.onrender.com')}
+                className="px-2 py-1 text-[11px] rounded bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-medium cursor-pointer border border-emerald-200"
+              >
+                Render Cloud
+              </button>
               <button
                 type="button"
                 onClick={() => setCustomUrlInput('http://127.0.0.1:8000')}
